@@ -53,6 +53,17 @@ public:
 		deserialize(shape_predictor_path) >> sp_;
 		deserialize(resnet_path) >> net_;
 	}
+	
+	FaceRec(const char* landmarkDatBuf,int landmarkLen,const char* recogDatBuf,int recogLen) {
+		detector_ = get_frontal_face_detector();
+		std::string landmarkDatBufStr(landmarkDatBuf,landmarkLen);
+		std::istream landmarkDatStream(&landmarkDatBufStr);
+		std::string recogDatBufStr(recogDatBuf,recogLen);
+		std::istream recogDatStream(&recogDatBufStr);
+
+		deserialize(sp_, landmarkDatStream);
+		deserialize(net_, recogDatStream);
+	}
 
 	// TODO(Kagami): Jittering?
 	std::pair<std::vector<rectangle>, std::vector<descriptor>>
@@ -114,6 +125,22 @@ facerec* facerec_init(const char* model_dir) {
 	facerec* rec = (facerec*)calloc(1, sizeof(facerec));
 	try {
 		FaceRec* cls = new FaceRec(model_dir);
+		rec->cls = (void*)cls;
+	} catch(serialization_error& e) {
+		rec->err_str = strdup(e.what());
+		rec->err_code = SERIALIZATION_ERROR;
+	} catch (std::exception& e) {
+		rec->err_str = strdup(e.what());
+		rec->err_code = UNKNOWN_ERROR;
+	}
+	return rec;
+}
+
+
+facerec* facerec_init_from_buffer(const char* landmarkDatBuf,int landmarkLen,const char* recogDatBuf,int recogLen) {
+	facerec* rec = (facerec*)calloc(1, sizeof(facerec));
+	try {
+		FaceRec* cls = new FaceRec(const char* landmarkDatBuf,int landmarkLen,const char* recogDatBuf,int recogLen);
 		rec->cls = (void*)cls;
 	} catch(serialization_error& e) {
 		rec->err_str = strdup(e.what());
