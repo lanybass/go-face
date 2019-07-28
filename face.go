@@ -58,6 +58,26 @@ func NewRecognizer(modelDir string) (rec *Recognizer, err error) {
 	return
 }
 
+
+func NewRecognizerFromBuffer(landMarkDatBuf, recogDatBuf []byte) (rec *Recognizer, err error) {
+	ptr := C.facerec_init(
+		uintptr(unsafe.Pointer(&landMarkDatBuf[0])),
+		uintptr(len(landMarkDatBuf)),
+		uintptr(unsafe.Pointer(&recogDatBuf[0])),
+		uintptr(len(recogDatBuf)),
+	)
+
+	if ptr.err_str != nil {
+		defer C.facerec_free(ptr)
+		defer C.free(unsafe.Pointer(ptr.err_str))
+		err = makeError(C.GoString(ptr.err_str), int(ptr.err_code))
+		return
+	}
+
+	rec = &Recognizer{ptr}
+	return
+}
+
 func (rec *Recognizer) recognize(imgData []byte, maxFaces int) (faces []Face, err error) {
 	if len(imgData) == 0 {
 		err = ImageLoadError("Empty image")
