@@ -57,9 +57,9 @@ public:
 	FaceRec(const char* landmarkDatBuf,int landmarkLen,const char* recogDatBuf,int recogLen) {
 		detector_ = get_frontal_face_detector();
 		std::string landmarkDatBufStr(landmarkDatBuf,landmarkLen);
-		std::istream landmarkDatStream(landmarkDatBufStr);
+		std::istringstream landmarkDatStream(landmarkDatBufStr);
 		std::string recogDatBufStr(recogDatBuf,recogLen);
-		std::istream recogDatStream(recogDatBufStr);
+		std::istringstream recogDatStream(recogDatBufStr);
 
 		deserialize(sp_, landmarkDatStream);
 		deserialize(net_, recogDatStream);
