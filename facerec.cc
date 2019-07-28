@@ -140,7 +140,7 @@ facerec* facerec_init(const char* model_dir) {
 facerec* facerec_init_from_buffer(const char* landmarkDatBuf,int landmarkLen,const char* recogDatBuf,int recogLen) {
 	facerec* rec = (facerec*)calloc(1, sizeof(facerec));
 	try {
-		FaceRec* cls = new FaceRec(const char* landmarkDatBuf,int landmarkLen,const char* recogDatBuf,int recogLen);
+		FaceRec* cls = new FaceRec(landmarkDatBuf,landmarkLen,recogDatBuf,recogLen);
 		rec->cls = (void*)cls;
 	} catch(serialization_error& e) {
 		rec->err_str = strdup(e.what());
