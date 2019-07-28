@@ -62,9 +62,9 @@ func NewRecognizer(modelDir string) (rec *Recognizer, err error) {
 func NewRecognizerFromBuffer(landMarkDatBuf, recogDatBuf []byte) (rec *Recognizer, err error) {
 	ptr := C.facerec_init_from_buffer(
 		(*C.char)(unsafe.Pointer(&landMarkDatBuf[0])),
-		len(landMarkDatBuf),
+		C.int(len(landMarkDatBuf)),
 		(*C.char)(unsafe.Pointer(&recogDatBuf[0])),
-		len(recogDatBuf),
+		C.int(len(recogDatBuf)),
 	)
 
 	if ptr.err_str != nil {
