@@ -60,7 +60,7 @@ func NewRecognizer(modelDir string) (rec *Recognizer, err error) {
 
 
 func NewRecognizerFromBuffer(landMarkDatBuf, recogDatBuf []byte) (rec *Recognizer, err error) {
-	ptr := C.facerec_init(
+	ptr := C.facerec_init_from_buffer(
 		uintptr(unsafe.Pointer(&landMarkDatBuf[0])),
 		uintptr(len(landMarkDatBuf)),
 		uintptr(unsafe.Pointer(&recogDatBuf[0])),
