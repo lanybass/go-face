@@ -150,7 +150,10 @@ func (rec *Recognizer) Recognize(imgData []byte) (faces []Face, err error) {
 // nil otherwise. Only JPEG format is currently supported. Thread-safe.
 func (rec *Recognizer) RecognizeSingle(imgData []byte) (face *Face, err error) {
 	faces, err := rec.recognize(imgData, 1)
-	if err != nil || len(faces) != 1 {
+	if err != nil  {
+		return nil, err
+	}
+	if len(faces) == 0 {
 		return
 	}
 	face = &faces[0]
